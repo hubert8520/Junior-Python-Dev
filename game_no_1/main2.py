@@ -56,8 +56,8 @@ while run:
         if red_enemy.countdown == 1:
             red_enemy.shot(redLaser)
 
-        if red_enemy.bullet_hit(player):
-            update_player_hp_font()
+        red_enemy.bullet_hit(player)
+        update_player_hp_font()
 
         if red_enemy.hp <= 0:
             bg.score += 1
@@ -72,8 +72,8 @@ while run:
         if green_enemy.countdown == 1:
             green_enemy.shot(greenLaser)
 
-        if green_enemy.bullet_hit(player):
-            update_player_hp_font()
+        green_enemy.bullet_hit(player)
+        update_player_hp_font()
 
         if green_enemy.hp <= 0:
             bg.score += 1
