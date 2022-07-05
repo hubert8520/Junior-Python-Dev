@@ -50,12 +50,12 @@ while run:
     # GAME LOGIC---------------------------------------------
     for red_enemy in redEnemyList:
         red_enemy.move()
-        red_enemy.bullets_move()
 
         red_enemy.start_countdown()
         if red_enemy.countdown == 1:
-            red_enemy.shot(redLaser)
-
+            red_enemy.shot(RedLaser())
+        red_enemy.bullets_move()
+        
         red_enemy.bullet_hit(player)
         update_player_hp_font()
 
@@ -66,11 +66,11 @@ while run:
 
     for green_enemy in greenEnemyList:
         green_enemy.move()
-        green_enemy.bullets_move()
 
         green_enemy.start_countdown()
         if green_enemy.countdown == 1:
-            green_enemy.shot(greenLaser)
+            green_enemy.shot(GreenLaser())
+        green_enemy.bullets_move()
 
         green_enemy.bullet_hit(player)
         update_player_hp_font()
