@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+pg.init()
 pg.font.init()
 
 # ------------- COLORS ------------- #
@@ -13,16 +14,50 @@ BLUE = 0, 0, 255
 WIDTH = 1200
 HEIGHT = 800
 window = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption('Hubert Grzelka Space Shooter')
+pg.display.set_caption('Hubert Grzelka Space Shooter project')
 FPS = 60
 
 
 # ------------- FONTS ------------- #
+menu_font = pg.font.SysFont('Comic Sans MS', 50)
 main_font = pg.font.SysFont('Comic Sans MS', 30)
 lost_font = pg.font.SysFont('Comic Sans MS', 50)
 
 
 # ------------- CLASSES ------------- #
+class Button:
+    def __init__(self, button_name: str):
+        self.img = pg.image.load(
+            'images/menu/' + button_name + ".png").convert_alpha()
+        self.img2 = None
+        self.rect = self.img.get_rect()
+        self.sound = pg.mixer.Sound('sounds/button_sound.wav')
+
+    def hoovered_over(self, mouse_pos_varName):
+        return self.rect.collidepoint(mouse_pos_varName)
+
+    def clicked(self, mouse_pos_varName, event):
+        if self.rect.collidepoint(mouse_pos_varName):
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if pg.mouse.get_pressed()[0]:
+                    return True
+
+
+class SinglePlayerButton(Button):
+    def __init__(self, button_name: str):
+        super().__init__(button_name)
+        self.img2 = pg.image.load(
+            'images/menu/' + button_name + "_2.png").convert_alpha()
+        self.rect.x = WIDTH // 2 - self.img.get_width() // 2
+        self.rect.y = 300
+
+
+class ExitButton(SinglePlayerButton):
+    def __init__(self, button_name: str):
+        super().__init__(button_name)
+        self.rect.y = 400
+
+
 class Background():
     def __init__(self):
         self.img = pg.image.load('images/backgrounds/background_0.png')
@@ -95,8 +130,8 @@ class Player():
 
     def shot(self, bulletObj):
         self.bulletList.append(bulletObj)
-        bulletObj.rect.center = (
-            self.rect.centerx, self.rect.y - bulletObj.rect.height // 2)
+        bulletObj.rect.center = (self.rect.centerx,
+                                 self.rect.y - bulletObj.rect.height // 2)
 
     def bullets_move(self):
         for bullet in self.bulletList:
@@ -114,6 +149,16 @@ class Player():
                 if bullet.rect.colliderect(enemy.rect):
                     enemy.hp -= bullet.dmg
                     self.bulletList.remove(bullet)
+
+    def check_collision(self, redEnemyList: list, greenEnemyList: list):
+        for enemy in redEnemyList:
+            if enemy.rect.colliderect(self.rect):
+                redEnemyList.remove(enemy)
+                self.hp -= 5
+        for enemy in greenEnemyList:
+            if enemy.rect.colliderect(self.rect):
+                greenEnemyList.remove(enemy)
+                self.hp -= 5
 
 
 class RedEnemy(Player):
@@ -136,7 +181,7 @@ class RedEnemy(Player):
         self.hp = 3
 
     def start_countdown(self):
-        self.countdown = random.randint(1, 60 * 3)
+        self.countdown = random.randint(1, 60 * 2)
 
     def move(self):
         if self.rect.x > 0 and self.rect.x + self.rect.width < WIDTH:
@@ -147,6 +192,11 @@ class RedEnemy(Player):
 
     def die(self, enemyList: list):
         enemyList.remove(self)
+
+    def shot(self, bulletObj):
+        self.bulletList.append(bulletObj)
+        bulletObj.rect.center = (
+            self.rect.centerx, self.rect.y + self.rect.height)
 
     def bullets_move(self):
         for bullet in self.bulletList:
@@ -179,30 +229,40 @@ class GreenEnemy(RedEnemy):
 
 # ------------- BACKGROUND AND LVL SETTINGS ------------- #
 bg = Background()
-lvl = 1
+lvl = 0
 player = Player()
 
 player_hp_font = main_font.render(f'Your health: {player.hp}', True, WHITE)
-player_score_font = main_font.render(f'Your score: {bg.score}', True, WHITE)
+player_score_font = main_font.render(
+    f'Your score: {bg.score}, level: {lvl+1}', True, WHITE)
+player_lost_font = lost_font.render(f'You lost!', True, WHITE)
+
+# ------------- CREATED FUNCTIONS ------------- #
 
 
 def draw_whole_window(redEnemyList: list, greenEnemyList: list, player: object):
-    window.fill(BLACK)
     window.blit(bg.img_scaled, (bg.x, bg.y))
     window.blit(player_hp_font, (10, 10))
     window.blit(player_score_font,
                 (WIDTH - player_score_font.get_rect().width - 10, 10))
-    for enemy in redEnemyList:
-        enemy.draw(window)
-    for enemy in greenEnemyList:
-        enemy.draw(window)
-    player.draw(window)
+    if player.hp > 0:
+        for enemy in redEnemyList:
+            enemy.draw(window)
+        for enemy in greenEnemyList:
+            enemy.draw(window)
+        player.draw(window)
+    else:
+        redEnemyList.clear()
+        greenEnemyList.clear()
+        window.blit(player_lost_font,
+                    (WIDTH // 2 - player_lost_font.get_rect().width // 2, HEIGHT // 2))
     pg.display.flip()
 
 
 def update_score():
     global player_score_font
-    player_score_font = main_font.render(f'Your score: {bg.score}',
+    global lvl
+    player_score_font = main_font.render(f'Your score: {bg.score}, level: {lvl+1}',
                                          True, WHITE)
 
 
