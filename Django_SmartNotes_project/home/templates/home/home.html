@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1><b>Welcome to SmartNotes!</b></h1>
+    <p>Today is {{ today }}</p>
+
+    <!-- 'notes.list' is a name you have to give (or any other name) in notes/urls.py to a certain link-->
+    <a href="{% url 'notes.list' %}" class="btn btn-primary">Checkout your SmartNotes!</a>
+{% endblock %}

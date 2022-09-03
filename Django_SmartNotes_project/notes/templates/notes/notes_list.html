@@ -1,0 +1,31 @@
+<!-- Here we use our base template located in static/templates/-->
+<!-- In order to do this you must "extend" this base template with command below-->
+<!-- and then just rewrite the block (in this case called "content") with content you like-->
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'notes.new' %}" class="btn btn-primary my-3">Create new note</a>
+<h2 class="my-3">These are your notes:</h2>
+<div class="row row-col3 g-2">
+    <!-- dla kazdego note w notes (stworzyles klucz notes w views.py) wyswietl element note.title-->
+    {% for note in notes %}
+    <div class="col">
+        <div class="p-2 border">
+            <a href="{% url 'notes.details' pk=note.id%}" class="text-dark text-decoration-non">
+                <h4>{{ note.title }}</h4>
+            </a>
+            {{ note.text|truncatechars:10 }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<h2 class="my-3">You have to be logged in to see this page</h2>
+<a href="{% url 'home' %}" class="btn btn-primary">Home Page</a>
+<a href="{% url 'login' %}" class="btn btn-primary">LogIn</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="container p-5 bg-primary text-white text-center">Create new note:</h2>
+<form method="POST">{% csrf_token %}
+        {{ form.as_p }}     <!-- .as_p powoduje to, ze pola do uzupelnienia sa w pionie i jedno pod drugim -->
+    <button type="submit" class="btn btn-primary my-5">Save</button>
+    <a href="{% url 'notes.list' %}" class="btn btn-secondary my-5">Back</a>
+</form>
+
+{% if form.errors %}
+<div class="alert alert-danger my-5">
+    {{ form.errors.title.as_text }}
+</div>
+{% endif %}
+
+{% endblock %}

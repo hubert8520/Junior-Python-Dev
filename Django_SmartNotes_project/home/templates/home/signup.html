@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="container p-5 bg-primary text-white text-center">Create new user</h2>
+<form method="post" class="my-5" style="text-align:left; margin: auto; width: auto;">{% csrf_token%}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary my-3">Register</button>
+    <a href="{% url 'home' %}" class="btn btn-secondary my-3">Home Page</a>
+</form>
+
+{% endblock %}
