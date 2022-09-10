@@ -3,6 +3,7 @@ import random
 pg.init()
 pg.font.init()
 
+
 # ------------- COLORS ------------- #
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255

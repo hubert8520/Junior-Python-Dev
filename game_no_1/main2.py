@@ -1,4 +1,3 @@
-
 import pygame as pg
 from static2 import *
 pg.init()
