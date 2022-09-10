@@ -142,13 +142,20 @@ class Player():
     def bullet_hit(self, redEnemyList: list, greenEnemyList: list):
         for bullet in self.bulletList:
             for enemy in redEnemyList:
-                if bullet.rect.colliderect(enemy.rect):
-                    enemy.hp -= bullet.dmg
-                    self.bulletList.remove(bullet)
+                try:
+                    if bullet.rect.colliderect(enemy.rect):
+                        enemy.hp -= bullet.dmg
+                        self.bulletList.remove(bullet)
+                except ValueError:
+                    print("ValueError has been handled")
+                    continue
             for enemy in greenEnemyList:
-                if bullet.rect.colliderect(enemy.rect):
-                    enemy.hp -= bullet.dmg
-                    self.bulletList.remove(bullet)
+                try:
+                    if bullet.rect.colliderect(enemy.rect):
+                        enemy.hp -= bullet.dmg
+                        self.bulletList.remove(bullet)
+                except ValueError:
+                    continue
 
     def check_collision(self, redEnemyList: list, greenEnemyList: list):
         for enemy in redEnemyList:
@@ -229,12 +236,12 @@ class GreenEnemy(RedEnemy):
 
 # ------------- BACKGROUND AND LVL SETTINGS ------------- #
 bg = Background()
-lvl = 0
+lvl = 1
 player = Player()
 
 player_hp_font = main_font.render(f'Your health: {player.hp}', True, WHITE)
 player_score_font = main_font.render(
-    f'Your score: {bg.score}, level: {lvl+1}', True, WHITE)
+    f'Your score: {bg.score}', True, WHITE)
 player_lost_font = lost_font.render(f'You lost!', True, WHITE)
 
 # ------------- CREATED FUNCTIONS ------------- #
@@ -262,11 +269,10 @@ def draw_whole_window(redEnemyList: list, greenEnemyList: list, player: object):
 def update_score():
     global player_score_font
     global lvl
-    player_score_font = main_font.render(f'Your score: {bg.score}, level: {lvl+1}',
-                                         True, WHITE)
+    player_score_font = main_font.render(
+        f'Your score: {bg.score}', True, WHITE)
 
 
 def update_player_hp_font():
     global player_hp_font
-    player_hp_font = main_font.render(f'Your health: {player.hp}',
-                                      True, WHITE)
+    player_hp_font = main_font.render(f'Your health: {player.hp}', True, WHITE)

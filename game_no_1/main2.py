@@ -5,15 +5,15 @@ pg.init()
 
 
 def main_game():
-    global lvl
+    pg.init()
     # ------------- ENEMIES SETTINGS ------------- #
     red_enemies_count = 5
     redEnemyList = [RedEnemy()
-                    for _ in range(red_enemies_count + lvl)]
+                    for _ in range(red_enemies_count)]
 
     green_enemies_count = 5
     greenEnemyList = [GreenEnemy()
-                      for _ in range(green_enemies_count + lvl)]
+                      for _ in range(green_enemies_count)]
 
     # ------------- GAME LOOP ------------- #
     clock = pg.time.Clock()
@@ -83,7 +83,6 @@ def main_game():
                 green_enemy.die(greenEnemyList)
 
         if len(greenEnemyList) == 0 and len(redEnemyList) == 0:
-            lvl += 1
             red_enemies_count += 2
             green_enemies_count += 2
             redEnemyList = [RedEnemy()
